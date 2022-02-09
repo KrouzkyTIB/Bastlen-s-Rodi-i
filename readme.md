@@ -29,6 +29,7 @@ Nastavení budíku:
 3. Pokud display ukazuje znak `-` tak je buzení aktuálně vypnuté
 4. Buzení lze zapnout kliknutím na tlačítko TIME_SET, poté se začne na displaji ukazovat čas zvonění budíku
 5. Čas buzení lze nastavit stejně jako čas
+6. Budík si zapamatuje nastavení alarmu i při vypnutí
 
 Jak vypnout alarm, když začne pískat:
 - Stačí stisknout jakékoliv tlačitko vyjma tlačítka SNOOZE
