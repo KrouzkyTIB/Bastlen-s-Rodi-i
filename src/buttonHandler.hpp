@@ -4,6 +4,9 @@
 #define TIME_SET_BUTTON A1
 #define TIME_PLUS_BUTTON A0
 #define TIME_MINUS_BUTTON A2
+#define ALERT_SET_BUTTON A3
+#define SNOOZE_BUTTON 13
+
 
 struct ButtonsStatus{
     bool setTimeClicked;

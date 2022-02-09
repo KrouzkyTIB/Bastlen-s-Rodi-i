@@ -7,11 +7,15 @@
 bool timeSetBtnClicked = false;
 bool timePlusBtnClicked = false;
 bool timeMinusBtnClicked = false;
+bool alarmSetBtnClicked = false;
+bool snoozeBtnClicked = false;
 
 void initButtons() {
     pinMode(TIME_PLUS_BUTTON, INPUT_PULLUP);
     pinMode(TIME_MINUS_BUTTON, INPUT_PULLUP);
     pinMode(TIME_SET_BUTTON, INPUT_PULLUP);
+    pinMode(ALERT_SET_BUTTON, INPUT_PULLUP);
+    pinMode(SNOOZE_BUTTON, INPUT_PULLUP);
 }
 
 bool isButtonClicked(int button, bool* buttonStatus) {
@@ -32,9 +36,8 @@ ButtonsStatus getButtonsStatus() {
         .setTimeClicked = isButtonClicked(TIME_SET_BUTTON, &timeSetBtnClicked),
         .timePlusClicked = isButtonClicked(TIME_PLUS_BUTTON, &timePlusBtnClicked),
         .timeMinusClicked = isButtonClicked(TIME_MINUS_BUTTON, &timeMinusBtnClicked),
-        .setAlarmClicked = false,  // TODO
-        .snoozeClicked = false     // TODO
-    };
+        .setAlarmClicked = isButtonClicked(ALERT_SET_BUTTON, &alarmSetBtnClicked),
+        .snoozeClicked = isButtonClicked(SNOOZE_BUTTON, &snoozeBtnClicked)};
 
     return status;
 }

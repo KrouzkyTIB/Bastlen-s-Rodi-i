@@ -5,10 +5,8 @@
 #include "time.hpp"
 
 #define MILLIS_IN_SECOND 1000
-#define DIGIT_DELAY 1
 
 enum SetTimeSteps {
-    NOT_SETTING,
     SET_HOURS,
     SET_MINUTES
 };
@@ -27,6 +25,9 @@ void clockRoutine();
 void handleButtons();
 void handleClockSetting(ButtonsStatus status);
 void setClockRoutine();
+void setAlarmRoutine();
+void handleAlarmSettings(ButtonsStatus status);
+
 
 void setup() {
     initDisplay();
@@ -34,6 +35,7 @@ void setup() {
     Serial.begin(9600);
     currentTime = getTime();
     initButtons();
+    initAlarmSettings();
 }
 
 void loop() {
@@ -47,6 +49,7 @@ void loop() {
             setClockRoutine();
             break;
         case ALARM_SETTING:
+            setAlarmRoutine();
             break;
     }
     handleButtons();
@@ -68,8 +71,9 @@ void handleButtons() {
         case CLOCK_RUNNING:
             if (status.setTimeClicked) {
                 clockStage = TIME_SETTING;
-                prepareSettingsTime();
+                prepareSettingsTime(false);
             } else if (status.setAlarmClicked) {
+                prepareSettingsTime(true);
                 clockStage = ALARM_SETTING;
             }
             break;
@@ -77,16 +81,12 @@ void handleButtons() {
             handleClockSetting(status);
             break;
         case ALARM_SETTING:
+            handleAlarmSettings(status);
             break;
     }
 }
 
 void handleClockSetting(ButtonsStatus status) {
-    if (status.setAlarmClicked) {
-        clockStage = ALARM_SETTING;
-        return;
-    }
-
     switch (setTimeStep) {
         case SET_HOURS:
             if (status.setTimeClicked) {
@@ -121,21 +121,65 @@ void setClockRoutine() {
     Time settingsTime = getSettingsTime();
     switch (setTimeStep) {
         case SET_HOURS:
-            if (currentTime.seconds % 2 == 0) {
-                showHours(settingsTime.hours, DIGIT_DELAY);
-            } else {
-                turnOffAllDigits();
-                delay(DIGIT_DELAY * 2);
-            }
-            showMinutes(settingsTime.mins, DIGIT_DELAY);
+            showBlinkingHours(currentTime, settingsTime);
             break;
         case SET_MINUTES:
-            showHours(settingsTime.hours, DIGIT_DELAY);
-            if (currentTime.seconds % 2 == 0) {
-                showMinutes(settingsTime.mins, DIGIT_DELAY);
+            showBlinkingMinutes(currentTime, settingsTime);
+            break;
+    }
+}
+
+void handleAlarmSettings(ButtonsStatus status) {
+
+    switch (setTimeStep) {
+        case SET_HOURS:
+            if (status.setAlarmClicked) {
+                setTimeStep = SET_MINUTES;
+            } else if (status.timePlusClicked) {
+                incrementHour();
+            } else if (status.timeMinusClicked) {
+                decrementHour();
+            } else if (status.setTimeClicked) {
+                toggleAlarmStatus();
+            }
+            break;
+        case SET_MINUTES:
+            if (status.setAlarmClicked) {
+                setTimeStep = SET_HOURS;
+                clockStage = CLOCK_RUNNING;
+                setAlarmTime(getSettingsTime());
+                currentTime = getTime();
+            } else if (status.timePlusClicked) {
+                incrementMinute();
+            } else if (status.timeMinusClicked) {
+                decrementMinute();
+            } else if (status.setTimeClicked) {
+                toggleAlarmStatus();
+            }
+            break;
+    }
+}
+
+void setAlarmRoutine() {
+    turnOffDots();
+    if (abs(millis() - lastMillis) >= MILLIS_IN_SECOND) {
+        currentTime = getTime();
+        lastMillis = millis();
+    }
+    Time settingsTime = getSettingsTime();
+    switch (setTimeStep) {
+        case SET_HOURS:
+            if (getAlarmSettings().on) {
+                showBlinkingHours(currentTime, settingsTime);
             } else {
-                turnOffAllDigits();
-                delay(DIGIT_DELAY * 2);
+                showBlinkingDashes(currentTime, true);
+            }
+            break;
+        case SET_MINUTES:
+            if (getAlarmSettings().on) {
+                showBlinkingMinutes(currentTime, settingsTime);
+            } else {
+                showBlinkingDashes(currentTime, false);
             }
             break;
     }

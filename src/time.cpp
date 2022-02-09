@@ -4,6 +4,7 @@
 DS3231 rtc;
 
 Time settingsTime;
+AlarmSettings alarmSettings;
 
 void initTime(uint8_t hours, uint8_t mins, uint8_t seconds) {
     Wire.begin();
@@ -21,8 +22,12 @@ Time getTime() {
     return currentTime;
 }
 
-void prepareSettingsTime() {
-    settingsTime = getTime();
+void prepareSettingsTime(bool forAlarmSetting) {
+    if (forAlarmSetting) {
+        settingsTime = alarmSettings.ringTime;
+    } else {
+        settingsTime = getTime();
+    }
     settingsTime.seconds = 0;
 }
 
@@ -50,4 +55,23 @@ void setTime(Time time) {
     rtc.setHour(time.hours);
     rtc.setMinute(time.mins);
     rtc.setSecond(time.seconds);
+}
+
+void initAlarmSettings() {
+    alarmSettings = {
+        .ringTime = {
+            .hours = 0,
+            .mins = 0,
+            .seconds = 0},
+        .on = false};
+}
+
+AlarmSettings getAlarmSettings() {
+    return alarmSettings;
+}
+void setAlarmTime(Time time) {
+    alarmSettings.ringTime = time;
+}
+void toggleAlarmStatus() {
+    alarmSettings.on = !alarmSettings.on;
 }
