@@ -22,7 +22,7 @@ uint8_t numbers[NUMBER_OF_NUMBERS][NUMBER_OF_SEGMENTS] = {
     {1, 1, 1, 1, 0, 1, 1}   // 9
 };
 
-uint8_t alarmTurnedOffSign[] = {0, 0, 0, 0, 0, 0, 1};
+uint8_t alarmTurnedOffSign[] = {0, 0, 0, 0, 0, 0, 1}; // -
 
 void initDisplay() {
     pinMode(RCLK, OUTPUT);

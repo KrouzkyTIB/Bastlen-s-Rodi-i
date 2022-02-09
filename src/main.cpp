@@ -28,7 +28,6 @@ void setClockRoutine();
 void setAlarmRoutine();
 void handleAlarmSettings(ButtonsStatus status);
 
-
 void setup() {
     initDisplay();
     initTime(13, 51, 0);
@@ -67,11 +66,13 @@ void clockRoutine() {
 
 void handleButtons() {
     ButtonsStatus status = getButtonsStatus();
-    // TODO add snooze and set alarm
-    if (status.setAlarmClicked || status.setTimeClicked || status.timeMinusClicked || status.timePlusClicked){
-        turnOffAlarm();
-    }
     
+    if (status.setAlarmClicked || status.setTimeClicked || status.timeMinusClicked || status.timePlusClicked) {
+        if (isAlarmRinging()) {
+            turnOffAlarm();
+            return;
+        }
+    }
 
     switch (clockStage) {
         case CLOCK_RUNNING:
@@ -137,7 +138,6 @@ void setClockRoutine() {
 }
 
 void handleAlarmSettings(ButtonsStatus status) {
-
     switch (setTimeStep) {
         case SET_HOURS:
             if (status.setAlarmClicked) {

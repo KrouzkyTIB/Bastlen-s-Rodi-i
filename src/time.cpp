@@ -1,11 +1,21 @@
 #include "time.hpp"
 
+#include <EEPROM.h>
 #include <Wire.h>
-DS3231 rtc;
 
+#define EEPROM_MAGIC_NUMBER 23
+enum EepromSaveAddresses {
+    MAGIC_NUMBER_ADDRESS,
+    ALARM_STATUS_ADDRESS,
+    ALARM_HOURS_ADDRESS,
+    ALARM_MINUTES_ADDRESS
+};
+
+DS3231 rtc;
 Time settingsTime;
 AlarmSettings alarmSettings;
-bool alarmRinging = false;
+bool alarmRinging;
+
 
 void initTime(uint8_t hours, uint8_t mins, uint8_t seconds) {
     Wire.begin();
@@ -59,12 +69,30 @@ void setTime(Time time) {
 }
 
 void initAlarmSettings() {
-    alarmSettings = {
-        .ringTime = {
-            .hours = 0,
-            .mins = 0,
-            .seconds = 0},
-        .on = false};
+    uint8_t magicNumber = EEPROM.read(MAGIC_NUMBER_ADDRESS);
+    if (magicNumber == EEPROM_MAGIC_NUMBER) {
+        // Data are saved in eeprom, time to load them
+        alarmSettings = {
+            .ringTime = {
+                .hours = EEPROM.read(ALARM_HOURS_ADDRESS),
+                .mins = EEPROM.read(ALARM_MINUTES_ADDRESS),
+                .seconds = 0},
+            .on = EEPROM.read(ALARM_STATUS_ADDRESS) == 1};
+    } else {
+        // Data are not saved in eeprom, time to prepare EEPROM and generateData
+        alarmSettings = {
+            .ringTime = {
+                .hours = 0,
+                .mins = 0,
+                .seconds = 0},
+            .on = false};
+        for (uint16_t i = 0; i < EEPROM.length(); i++) {
+            // erase eeprom
+            EEPROM.write(i, 0);
+        }
+        // now is eeprom prepared for write and reading
+        EEPROM.write(MAGIC_NUMBER_ADDRESS, EEPROM_MAGIC_NUMBER);
+    }
     alarmRinging = false;
     pinMode(ALARM_PIN, OUTPUT);
 }
@@ -74,9 +102,12 @@ AlarmSettings getAlarmSettings() {
 }
 void setAlarmTime(Time time) {
     alarmSettings.ringTime = time;
+    EEPROM.write(ALARM_HOURS_ADDRESS, time.hours);
+    EEPROM.write(ALARM_MINUTES_ADDRESS, time.mins);
 }
 void toggleAlarmStatus() {
     alarmSettings.on = !alarmSettings.on;
+    EEPROM.write(ALARM_STATUS_ADDRESS, alarmSettings.on);
 }
 
 void checkAlarm(Time currentTime) {
@@ -85,9 +116,16 @@ void checkAlarm(Time currentTime) {
     }
     if (currentTime.hours == alarmSettings.ringTime.hours && currentTime.mins == alarmSettings.ringTime.mins) {
         digitalWrite(ALARM_PIN, HIGH);
+        alarmRinging = true;
     }
 }
 
+bool isAlarmRinging(){
+    return alarmRinging;
+}
+
+
 void turnOffAlarm() {
     digitalWrite(ALARM_PIN, LOW);
+    alarmRinging = false;
 }

@@ -34,5 +34,6 @@ void toggleAlarmStatus();
 void initAlarmSettings();
 void checkAlarm(Time currentTime);
 void turnOffAlarm();
+bool isAlarmRinging();
 
 #endif
