@@ -60,6 +60,7 @@ void clockRoutine() {
         currentTime = getTime();
         lastMillis = millis();
         blinkWithDots(currentTime.seconds);
+        checkAlarm(currentTime);
     }
     showTime(currentTime.hours, currentTime.mins, DIGIT_DELAY);
 }
@@ -67,6 +68,11 @@ void clockRoutine() {
 void handleButtons() {
     ButtonsStatus status = getButtonsStatus();
     // TODO add snooze and set alarm
+    if (status.setAlarmClicked || status.setTimeClicked || status.timeMinusClicked || status.timePlusClicked){
+        turnOffAlarm();
+    }
+    
+
     switch (clockStage) {
         case CLOCK_RUNNING:
             if (status.setTimeClicked) {
@@ -117,6 +123,7 @@ void setClockRoutine() {
     if (abs(millis() - lastMillis) >= MILLIS_IN_SECOND) {
         currentTime = getTime();
         lastMillis = millis();
+        checkAlarm(currentTime);
     }
     Time settingsTime = getSettingsTime();
     switch (setTimeStep) {
@@ -165,6 +172,7 @@ void setAlarmRoutine() {
     if (abs(millis() - lastMillis) >= MILLIS_IN_SECOND) {
         currentTime = getTime();
         lastMillis = millis();
+        checkAlarm(currentTime);
     }
     Time settingsTime = getSettingsTime();
     switch (setTimeStep) {

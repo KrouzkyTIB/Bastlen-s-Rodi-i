@@ -5,6 +5,8 @@
 
 #define HOURS_IN_DAY 24
 #define MINUTES_IN_HOUR 60
+#define ALARM_PIN 7
+
 
 struct Time{
     byte hours;
@@ -30,7 +32,7 @@ AlarmSettings getAlarmSettings();
 void setAlarmTime(Time time);
 void toggleAlarmStatus();
 void initAlarmSettings();
-
-
+void checkAlarm(Time currentTime);
+void turnOffAlarm();
 
 #endif

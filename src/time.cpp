@@ -5,6 +5,7 @@ DS3231 rtc;
 
 Time settingsTime;
 AlarmSettings alarmSettings;
+bool alarmRinging = false;
 
 void initTime(uint8_t hours, uint8_t mins, uint8_t seconds) {
     Wire.begin();
@@ -64,6 +65,8 @@ void initAlarmSettings() {
             .mins = 0,
             .seconds = 0},
         .on = false};
+    alarmRinging = false;
+    pinMode(ALARM_PIN, OUTPUT);
 }
 
 AlarmSettings getAlarmSettings() {
@@ -74,4 +77,17 @@ void setAlarmTime(Time time) {
 }
 void toggleAlarmStatus() {
     alarmSettings.on = !alarmSettings.on;
+}
+
+void checkAlarm(Time currentTime) {
+    if (!alarmSettings.on || currentTime.seconds != 0) {
+        return;
+    }
+    if (currentTime.hours == alarmSettings.ringTime.hours && currentTime.mins == alarmSettings.ringTime.mins) {
+        digitalWrite(ALARM_PIN, HIGH);
+    }
+}
+
+void turnOffAlarm() {
+    digitalWrite(ALARM_PIN, LOW);
 }
