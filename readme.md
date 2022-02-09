@@ -22,6 +22,7 @@ Nastavení času:
 4. Nyní máme k dispozici výběr minut, výběr provedeme stejně jako u hodin
 5. Potvrdíme výběr minut opětovným kliknutím na tlačítko TIME_SET
 6. Při dokončení nastavování času jsou sekundy v hodinách nastaveny na 0
+7. Pokud by jste chtěli i zachování času po vypnutí je nutné k modulu RTC přidělat baterii
 
 Nastavení budíku:
 1. Klikneme na tlačítko ALARM_SET
