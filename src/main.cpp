@@ -45,30 +45,14 @@ void handleAlarmSettings(ButtonsStatus status);
  * @brief První, ze dvou hlavních funkcí, zde dojde k inicializaci hodin
  */
 void setup() {
-    initDisplay();
-    initTime(13, 51, 0);
-    Serial.begin(9600);
-    currentTime = getTime();
-    initButtons();
-    initAlarmSettings();
+    //Zde budeme doplňovat inicializaci programu
 }
 /**
  * @brief Hlavní smyčka programu 
  */
 
 void loop() {
-    switch (clockStage) {
-        case CLOCK_RUNNING:
-            clockRoutine();
-            break;
-        case TIME_SETTING:
-            setClockRoutine();
-            break;
-        case ALARM_SETTING:
-            setAlarmRoutine();
-            break;
-    }
-    handleButtons();
+    //Zde budeme doplňovat hlavní smyčku programu
 }
 /**
  * @brief Funkce, která se stará o normální běh hodin
