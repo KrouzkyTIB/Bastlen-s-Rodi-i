@@ -10,6 +10,10 @@ bool timeMinusBtnClicked = false;
 bool alarmSetBtnClicked = false;
 bool snoozeBtnClicked = false;
 
+/**
+ * @brief Inicializuje tlačítka a připravý je na vstupní signály
+ *
+ */
 void initButtons() {
     pinMode(TIME_PLUS_BUTTON, INPUT_PULLUP);
     pinMode(TIME_MINUS_BUTTON, INPUT_PULLUP);
@@ -18,6 +22,14 @@ void initButtons() {
     pinMode(SNOOZE_BUTTON, INPUT_PULLUP);
 }
 
+/**
+ * @brief Podívá se, jestli je dané tlačítko stisknuté a pokud ano vrátí hodnotu true, jinak vrátí hodnotu false
+ * 
+ * @param button Pin, ke kterému je tlačítko připojeno
+ * @param buttonStatus ukazatel na stav tlačítka v naší datové struktuře
+ * @return true pokud je tlačítko stisknuté
+ * @return false pokud není tlačítko stisknuto
+ */
 bool isButtonClicked(int button, bool* buttonStatus) {
     bool retValue = false;
     if (digitalRead(button) == BUTTON_CLICKED) {
@@ -30,6 +42,12 @@ bool isButtonClicked(int button, bool* buttonStatus) {
     }
     return retValue;
 }
+
+/**
+ * @brief Vrací stav všech tlačítek po přečtení vstupů Arduina
+ * 
+ * @return ButtonsStatus datová struktura obsahujíçí data o tom, která tlačítka jsou stisknuta a která nikoliv
+ */
 
 ButtonsStatus getButtonsStatus() {
     ButtonsStatus status = {

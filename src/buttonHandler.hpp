@@ -7,6 +7,9 @@
 #define ALERT_SET_BUTTON A3
 #define SNOOZE_BUTTON 13
 
+/**
+ * Datová struktura na udržení stavu tlačítek použitých v projektu
+ */
 
 struct ButtonsStatus{
     bool setTimeClicked;

@@ -10,15 +10,28 @@ enum SetTimeSteps {
     SET_HOURS,
     SET_MINUTES
 };
+/**
+ * @brief Jednotlivé stavy hodin
+ * CLOCK_RUNNING - hodiny ukazují čas
+ * TIME_SETTING - hodiny jsou v módu nastavování času
+ * ALARM_SETTING - hodiny jsou v módu nastavování alarmu
+ */
 enum ClockStages {
     CLOCK_RUNNING,
     TIME_SETTING,
     ALARM_SETTING
 };
-
+/**
+ * @brief Datová struktura na udržování aktuálního času
+ * 
+ */
 Time currentTime;
 unsigned long lastMillis = 0;
 uint8_t setTimeStep = SET_HOURS;
+/**
+ * @brief Aktuální mód hodin, ve kterém se hodiny nacházejí
+ * 
+ */
 uint8_t clockStage = CLOCK_RUNNING;
 
 void clockRoutine();
@@ -28,6 +41,9 @@ void setClockRoutine();
 void setAlarmRoutine();
 void handleAlarmSettings(ButtonsStatus status);
 
+/**
+ * @brief První, ze dvou hlavních funkcí, zde dojde k inicializaci hodin
+ */
 void setup() {
     initDisplay();
     initTime(13, 51, 0);
@@ -36,10 +52,11 @@ void setup() {
     initButtons();
     initAlarmSettings();
 }
+/**
+ * @brief Hlavní smyčka programu 
+ */
 
 void loop() {
-    // put your main code here, to run repeatedly:
-
     switch (clockStage) {
         case CLOCK_RUNNING:
             clockRoutine();
@@ -53,6 +70,9 @@ void loop() {
     }
     handleButtons();
 }
+/**
+ * @brief Funkce, která se stará o normální běh hodin
+ */
 
 void clockRoutine() {
     if (abs(millis() - lastMillis) >= MILLIS_IN_SECOND) {
@@ -64,6 +84,10 @@ void clockRoutine() {
     showTime(currentTime.hours, currentTime.mins, DIGIT_DELAY);
 }
 
+/**
+ * @brief Funkce, která se stará o obsluhu tlačítek
+ * 
+ */
 void handleButtons() {
     ButtonsStatus status = getButtonsStatus();
     
@@ -92,6 +116,11 @@ void handleButtons() {
             break;
     }
 }
+/**
+ * @brief Stará se o nastavení času na hodinách
+ * 
+ * @param status Stav všech tlačítek na desce
+ */
 
 void handleClockSetting(ButtonsStatus status) {
     switch (setTimeStep) {
@@ -119,6 +148,10 @@ void handleClockSetting(ButtonsStatus status) {
     }
 }
 
+/**
+ * @brief Nastavení desky na mód nastavení času
+ */
+
 void setClockRoutine() {
     turnOffDots();
     if (abs(millis() - lastMillis) >= MILLIS_IN_SECOND) {
@@ -136,6 +169,11 @@ void setClockRoutine() {
             break;
     }
 }
+
+/**
+ * @brief Funkce na nastavení alarmu
+ * @param status Stav tlačítek na desce
+ */
 
 void handleAlarmSettings(ButtonsStatus status) {
     switch (setTimeStep) {
@@ -166,6 +204,9 @@ void handleAlarmSettings(ButtonsStatus status) {
             break;
     }
 }
+/**
+ * @brief Nastaví stav hodin na mód nastavení alarmu
+ */
 
 void setAlarmRoutine() {
     turnOffDots();
