@@ -1,8 +1,8 @@
 #include <Arduino.h>
 
-#include "buttonHandler.hpp"
-#include "display.hpp"
-#include "time.hpp"
+#include "buttons/buttonHandler.hpp"
+#include "display/display.hpp"
+#include "time/time.hpp"
 
 #define MILLIS_IN_SECOND 1000
 
@@ -118,7 +118,6 @@ void handleButtons() {
 }
 /**
  * @brief Stará se o nastavení času na hodinách
- * 
  * @param status Stav všech tlačítek na desce
  */
 

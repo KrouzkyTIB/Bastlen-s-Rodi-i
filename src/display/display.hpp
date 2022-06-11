@@ -2,7 +2,7 @@
 #define __DISPLAY__HPP__
 #include <Arduino.h>
 
-#include "time.hpp"
+#include "time/time.hpp"
 
 #define SER 2
 #define RCLK 3
