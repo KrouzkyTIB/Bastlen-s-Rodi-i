@@ -36,4 +36,9 @@ Jak vypnout alarm, když začne pískat:
 - Stačí stisknout jakékoliv tlačitko vyjma tlačítka SNOOZE
 
 
-
+### Otevření projektu ve Visual Studio Code:
+1. Ve Visual Studio Code musíte mít nainstalované rozšíření PlatformIO
+2. Klikněte na zelené tlačítko Code a vyberte Download ZIP
+3. Po stáhnutí programu si stáhnutý archiv vyextrahujte
+4. Vyextrahovanou složku poté otevřete ve VS Code. Kliknete na File -> Open Folder a zde vyberete složku s projektem
+5. Otevřený projekt můžete nahrát do Arduina tím, že kliknete na Terminal -> Run Task -> Platformio: Upload
